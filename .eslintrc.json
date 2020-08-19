@@ -1,0 +1,30 @@
+{
+  "extends": "standard",
+  "env": {
+    "es6": true,
+    "browser": true,
+    "jest": true,
+    "node": true
+  },
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "jest",
+    "import",
+    "node",
+    "promise",
+    "standard",
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "no-var": 2,
+    "no-useless-constructor": "off",
+    "prefer-const": 2,
+    "no-unused-vars": "off",
+    "import/export": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-dupe-class-members": "off",
+    "indent": ["error", 4],
+    "semi": ["error", "always"],
+    "func-call-spacing": 2
+  }
+}

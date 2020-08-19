@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["ES2015.Symbol", "DOM", "ES5", "ScriptHost"],
+    "outDir": "dist/",
+    "types": ["reflect-metadata", "jest", "requirejs"],
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "importHelpers": true,
+    "esModuleInterop": true,
+    "moduleResolution": "node"
+  },
+  "include": ["src/**/*.ts"]
+}

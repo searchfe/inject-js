@@ -1,7 +1,5 @@
 /**
- * ES6 Map 的部分实现，满足 Molecule 内部的需求
- * TODO
- *   * 搜索 polyfill 项目上线后，移除这个类
+ * ES6 Map 的部分实现
  */
 export class Map {
   private _keys: any[] = []

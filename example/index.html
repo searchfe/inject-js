@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Example for inject-js</title>
+    <script src="http://s1.bdstatic.com/r/www/cache/efe/esl/2-1-6/esl.js"></script>
+    <script src="/node_modules/tslib/tslib.js"></script>
+    <script src="/node_modules/reflect-metadata/Reflect.js"></script>
+    <script>
+        require.config({
+            baseUrl: '/',
+            waitSeconds: 6
+        });
+    </script>
+</head>
+<body>
+    <div class="page">
+        <div class="results">
+            <div class="result">
+                我是一个result
+            </div>
+        </div>
+        <div class="page-controller">
+            <button>点击加载</button>
+        </div>
+    </div>
+    <script src='./static/index.js'></script>
+    <script>
+        require(['example/static/index'], function(d) {
+            console.log(d)
+        })
+    </script>
+</body>
+</html>

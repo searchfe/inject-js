@@ -5,7 +5,6 @@ import { createFactoryProvider } from './factory-provider-impl';
 import { Map } from '../utils/map';
 import { InjectToken } from './inject-token';
 import { getDependencies, setDependencies } from './dependency';
-import { Root } from './builtin/root.service';
 
 export class Container {
   private providers: Map
@@ -36,24 +35,6 @@ export class Container {
       const service = provider.create(this, parent);
       this.services.push(service);
       return service;
-  }
-
-  /** 待废弃下线的功能，请不要再新增引用，请使用addMolecule替代 */
-  public bootstrap (el: any) {
-      const name = el.getAttribute('m-name');
-      const mole = this.create(`@molecule/${name}`);
-      if (el.__molecule__) {
-          return;
-      }
-      el.__molecule__ = mole;
-      const deps = getDependencies(mole['default']);
-      const Mole = mole['default'];
-      return new Mole(...deps.map(dep => {
-          if (dep === Root) {
-              return el;
-          }
-          return this.create(dep);
-      }));
   }
 
   public createMolecule (Mole: any) {

@@ -37,6 +37,11 @@
     "*.md"
   ],
   "devDependencies": {
+    "@semantic-release/changelog": "^5.0.1",
+    "@semantic-release/commit-analyzer": "^8.0.1",
+    "@semantic-release/git": "^9.0.0",
+    "@semantic-release/npm": "^7.0.6",
+    "@semantic-release/release-notes-generator": "^9.0.1",
     "@types/jest": "^24.0.12",
     "@types/node": "^11.13.4",
     "@types/requirejs": "^2.1.31",
@@ -69,5 +74,15 @@
   },
   "dependencies": {
     "http-server": "^0.12.3"
+  },
+  "release": {
+    "branch": "master",
+    "plugins": [
+      "@semantic-release/commit-analyzer",
+      "@semantic-release/release-notes-generator",
+      "@semantic-release/changelog",
+      "@semantic-release/npm",
+      "@semantic-release/git"
+    ]
   }
 }

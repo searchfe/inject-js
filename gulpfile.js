@@ -19,7 +19,7 @@ const filter = require('gulp-filter');
 gulp.task('build', () => {
     const f = filter(['**/*.js'], { restore: true });
 
-    return gulp
+    const stream = gulp
         .src(['src/**/*.ts'], { base: path.resolve('src') })
         .pipe(project())
         .pipe(f)
@@ -28,8 +28,11 @@ gulp.task('build', () => {
             anonymousModule: ['**/*'],
             exlude: ['*.ts']
         }))
-        .pipe(f.restore)
         .pipe(gulp.dest('dist'));
+
+    f.restore.pipe(gulp.dest('dist/types'));
+
+    return stream;
 });
 
 gulp.task('build-demo', () => {

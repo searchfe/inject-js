@@ -1,4 +1,7 @@
 # inject-js
+[![Build Status](https://travis-ci.org/searchfe/inject-js.svg?branch=master)](https://travis-ci.org/github/searchfe/inject-js)
+[![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/searchfe/inject-js)
+
 a dependency Injection library.
 
 依赖注入lib库

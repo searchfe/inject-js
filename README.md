@@ -108,7 +108,9 @@ class FooService {}
 container.addService(FooService)
 ```
 
-### Container
+# Container
+
+依赖注入容器
 
 根据控制反转的概念： [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control) (IoC)，Container作为控制反转的容器，当你给容器提供一个toke时，容器会自动的根据这个token值去注入对应的依赖，而这个功能的实现是依赖上述的 `inject` 以及 `injectable` 去实现的。
 
@@ -119,3 +121,13 @@ container.addService(FooService)
 ```typescript
 type InjectToken = Service | Symbol | string
 ```
+
+### Providers
+
+在container中，有一个私有变量providers，用于提供给容器去根据其token加载对应的实例。在我们的lib库里面，提供了以下3中类型的provider
+
+#### Service Provider
+
+#### Value Provider
+
+#### Factory provider

@@ -2,8 +2,9 @@
   "name": "@searchfe/inject-js",
   "version": "0.0.0-development",
   "description": "A Dependency Injection library",
-  "main": "dist/index.js",
-  "types": "dist/types/index.d.ts",
+  "main": "dist/amd/index.js",
+  "module": "./dist/esm5/index.js",
+  "types": "./dist/types/index.d.ts",
   "scripts": {
     "test": "jest",
     "demo": "ts-node demo",

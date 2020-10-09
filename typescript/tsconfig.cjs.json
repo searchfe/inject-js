@@ -1,0 +1,27 @@
+{
+    "compilerOptions": {
+        "target": "es2015",
+        "module": "commonjs",
+        "lib": [
+            "ES2015.Symbol",
+            "DOM",
+            "ES5",
+            "ScriptHost",
+            "ES2015.Iterable"
+        ],
+        "outDir": "dist/cjs/",
+        "types": [
+            "reflect-metadata",
+            "jest",
+            "requirejs"
+        ],
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "importHelpers": true,
+        "esModuleInterop": true,
+        "moduleResolution": "node"
+    },
+    "include": [
+        "src/**/*.ts"
+    ]
+}

@@ -124,10 +124,20 @@ type InjectToken = Service | Symbol | string
 
 ### Providers
 
-在container中，有一个私有变量providers，用于提供给容器去根据其token加载对应的实例。在我们的lib库里面，提供了以下3中类型的provider
+在container中，有一个私有变量providers，用于提供给容器去根据其token加载对应的实例。在我们的lib库里面，提供了以下3中类型的provider：Service Provider/Value Provider/Factory provider，并且可以通过对应的方法注册不同的provider。
 
-#### Service Provider
+### addProvider
 
-#### Value Provider
+container的addProvider方法可以为该容器注册一个provider，每个provider需要提供create初始化方法，返回该provider注入的依赖。
 
-#### Factory provider
+#### addService
+
+service类型的provider可以调用addService来进行注册，inject-js内部的service-provider-impl会将传入的class注册到容器上，初始化时会生成一个实例注入到容器中。
+
+#### addValue
+
+value类型的provider可以调用addValue来进行注册，inject-js内部的value-provider-impl会将传入的value值注册到容器上，初始化时会自动注入到容器中。
+
+#### addFactory
+
+factory类型的provider可以调用addFactory来进行注册，inject-js内部的factory-provider-impl会将传入的工厂方法注册到容器上，初始化时传入工厂的参数完成初始化注入到容器中。

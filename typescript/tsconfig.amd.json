@@ -3,7 +3,7 @@
     "target": "es5",
     "module": "amd",
     "lib": ["ES2015.Symbol", "DOM", "ES5", "ScriptHost"],
-    "outDir": "dist/",
+    "outDir": "dist/amd/",
     "types": ["reflect-metadata", "jest", "requirejs"],
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,

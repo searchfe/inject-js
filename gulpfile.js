@@ -30,7 +30,7 @@ gulp.task('build-amd', () => {
         .pipe(project())
         .pipe(f)
         .pipe(amdWrap({
-            baseUrl: path.resolve(__dirname, 'dist'),
+            baseUrl: path.resolve(__dirname, 'typescript/dist/amd'),
             anonymousModule: ['**/*'],
             exlude: ['*.ts']
         }))

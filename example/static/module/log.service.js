@@ -2,7 +2,7 @@ define([
     'require',
     'exports',
     'tslib',
-    'dist/index',
+    'dist/amd/index',
     './queryInfo.service'
 ], function (require, exports, tslib_1, index_1, queryInfo_service_1) {
     'use strict';

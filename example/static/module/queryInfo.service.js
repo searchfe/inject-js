@@ -2,7 +2,7 @@ define([
     'require',
     'exports',
     'tslib',
-    'dist/index'
+    'dist/amd/index'
 ], function (require, exports, tslib_1, index_1) {
     'use strict';
     Object.defineProperty(exports, '__esModule', { value: true });

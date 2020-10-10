@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/searchfe/inject-js/compare/v1.2.0...v1.2.1) (2020-10-10)
+
+
+### Bug Fixes
+
+* 修复amd模块名编译问题 ([8c56c8c](https://github.com/searchfe/inject-js/commit/8c56c8c102510a1cc59ef065bd8bcdae6f63a91b))
+
 # [1.2.0](https://github.com/searchfe/inject-js/compare/v1.1.1...v1.2.0) (2020-10-09)
 
 

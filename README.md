@@ -142,6 +142,6 @@ value类型的provider可以调用addValue来进行注册，inject-js内部的va
 
 factory类型的provider可以调用addFactory来进行注册，inject-js内部的factory-provider-impl会将传入的工厂方法注册到容器上，初始化时传入工厂的参数完成初始化注入到容器中。
 
-### destroy
+## destroy
 
 容器提供了destroy方法，当调用容器的destroy方法时，inject-js会去分析已创建的所有provider进行拓扑排序，然后按照依赖倒序进行销毁，如：A依赖B，B依赖C，则按照A=>B=>C的顺序依次查找provider上面的destroy方法进行销毁

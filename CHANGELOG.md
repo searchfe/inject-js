@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/searchfe/inject-js/compare/v1.2.1...v1.3.0) (2020-10-15)
+
+
+### Features
+
+* 容器支持destroy方法 ([aca173c](https://github.com/searchfe/inject-js/commit/aca173c6fa9236bee96c4129d78fc910786ddc96))
+
 ## [1.2.1](https://github.com/searchfe/inject-js/compare/v1.2.0...v1.2.1) (2020-10-10)
 
 

@@ -1,7 +1,6 @@
 import 'reflect-metadata';
 import { InjectToken } from '../../src/di/inject-token';
 import { service } from '../../src/decorators/service';
-import { provider } from '../../src/decorators/provider';
 import { inject } from '../../src/decorators/inject';
 import { injectable } from '../../src/decorators/injectable';
 import { Container } from '../../src/di/container';
@@ -35,6 +34,35 @@ describe('Container', () => {
 
             expect(di.create(Foo).bar.coo).toBeInstanceOf(Coo);
         });
+    });
+    describe('#destroy', () => {
+        it('分析依赖排序', () => {
+            const di = new Container()
+            @service(di)
+            class Coo { }
+            @service(di)
+            class Bar { constructor(public coo: Coo) { } }
+            @service(di)
+            class Dog { }
+            @service(di)
+            class Foo { constructor(public bar: Bar, public dog: Dog) { } }
+            di.create(Foo);
+            expect(di.getSortedList()).toEqual([Coo, Dog, Bar, Foo]);
+        });
+        
+        it('可调用destroy方法', () => {
+            const di = new Container();
+            class Foo { 
+                constructor () {}
+                public destroy () {
+                    return 'destroy';
+                }
+            }
+            di.addService(Foo);
+            di.create(Foo);
+            di.destroy();
+            expect(di.getServices()).toEqual([]);
+        })
     });
     describe('#addService', () => {
         it('支持 addService', () => {
@@ -80,7 +108,7 @@ describe('Container', () => {
                 constructor (public foo: Foo) {}
             }
 
-            @provider
+            @injectable
             class FooProvider { // eslint-disable-line
                 create (container, parent) {
                     return { container, parent }
@@ -96,7 +124,7 @@ describe('Container', () => {
             const di = new Container()
             class Foo {}
 
-            @provider
+            @injectable
             class FooProvider { // eslint-disable-line
                 create (container, parent) {
                 return { container, parent }
@@ -121,7 +149,7 @@ describe('Container', () => {
                 constructor (@inject(token) public foo: Foo) {}
             }
 
-            @provider
+            @injectable
             class FooProvider { // eslint-disable-line
                 create (container, parent) {
                     return { container, parent };

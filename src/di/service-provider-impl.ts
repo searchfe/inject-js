@@ -16,6 +16,11 @@ export function createServiceProvider (Svc: (...args: any[]) => void) {
             }
             return this.instance;
         }
+        destroy () {
+            if (typeof this.instance.destroy === 'function') {
+                this.instance.destroy();
+            }
+        }
         static dependencies (): InjectToken[] {
             return getDependencies(Svc);
         }

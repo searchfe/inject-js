@@ -10,6 +10,7 @@ export class Container {
     private providers: Map
     private providerClasses: Map
     private services: any[] = [];
+    private prerequisites: any[][] = [];
 
     constructor () {
         this.providers = new Map();
@@ -24,7 +25,10 @@ export class Container {
         if (!ProviderClass) {
             throw new Error(`provider for ${fn} not found`);
         }
-        const deps = ProviderClass.dependencies().map(dep => this.create(dep, fn));
+        const deps = ProviderClass.dependencies().map(dep => {
+            this.prerequisites.push([fn, dep]);
+            return this.create(dep, fn);
+        });
         provider = new ProviderClass(...deps);
         this.providers.set(fn, provider);
         return provider;
@@ -35,13 +39,6 @@ export class Container {
         const service = provider.create(this, parent);
         this.services.push(service);
         return service;
-    }
-
-    public createMolecule (Mole: any) {
-        const deps = getDependencies(Mole);
-        return new Mole(...deps.map(dep => {
-            return this.create(dep);
-        }));
     }
 
     public addService (Svc: any) {
@@ -82,7 +79,56 @@ export class Container {
         return this.services.slice();
     }
 
-    public destory () {
-        // todo
+    public getSortedList () {
+        const inDegree = new Map();
+        const graph = new Map();
+        this.providers.keys((key) => inDegree.set(key, 0));
+        // 生成入度map和哈希表
+        for (let i = 0; i < this.prerequisites.length; i++) {
+            const degreeVal: number = inDegree.get(this.prerequisites[i][0]);
+            inDegree.set(this.prerequisites[i][0], degreeVal + 1);
+            if (graph.get(this.prerequisites[i][1])) {
+                const nowGraph = graph.get(this.prerequisites[i][1]).push(this.prerequisites[i][0]);
+                graph.set(this.prerequisites[i][1], nowGraph);
+            } else {
+                graph.set(this.prerequisites[i][1], [this.prerequisites[i][0]]);
+            }
+        }
+        const result = [];
+        const queue = [];
+        inDegree.keys((key) => {
+            if (inDegree.get(key) === 0) {
+                queue.push(key);
+            }
+        });
+        while (queue.length) {
+            const cur = queue.shift();
+            result.push(cur);
+            const toEnQueue = graph.get(cur);
+            if (toEnQueue && toEnQueue.length) {
+                for (let i = 0; i < toEnQueue.length; i++) {
+                    const inDegreeVal = inDegree.get(toEnQueue[i]);
+                    if (inDegreeVal === 1) {
+                        queue.push(toEnQueue[i]);
+                    } else {
+                        inDegree.set(toEnQueue[i], inDegreeVal - 1);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
+    public destroy () {
+        const providers = this.getSortedList();
+        for (let index = providers.length - 1; index >= 0; index--) {
+            const element = providers[index];
+            const thisProvider = this.providers.get(element);
+            if (thisProvider.destroy && typeof thisProvider.destroy === 'function') {
+                thisProvider.destroy();
+            }
+        }
+        this.providers.clear();
+        this.services = [];
     }
 }

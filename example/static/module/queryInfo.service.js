@@ -11,6 +11,9 @@ define([
         function QueryInfo() {
             console.log('queryInfo init');
         }
+        QueryInfo.prototype.destroy = function () {
+            console.log('queryInfo destroy');
+        }
         QueryInfo = tslib_1.__decorate([
             index_1.injectable,
             tslib_1.__metadata('design:paramtypes', [])

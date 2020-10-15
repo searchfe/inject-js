@@ -61,22 +61,6 @@ gulp.task('build-cjs', () => {
     return stream;
 });
 
-gulp.task('build-demo', () => {
-    const f = filter(['**/*.js'], { restore: true });
-
-    return gulp
-        .src(['example/**/*.ts'], { base: path.resolve('example') })
-        .pipe(project())
-        .pipe(f)
-        .pipe(amdWrap({
-            baseUrl: path.resolve(__dirname, 'example'),
-            anonymousModule: ['**/*'],
-            exlude: ['*.ts']
-        }))
-        .pipe(f.restore)
-        .pipe(gulp.dest('example'));
-});
-
 gulp.task('build', gulp.series('build-amd', 'build-esm5', 'build-cjs'));
 
 gulp.task('deploy', () => {

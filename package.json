@@ -1,6 +1,6 @@
 {
   "name": "@searchfe/inject-js",
-  "version": "1.2.1",
+  "version": "1.2.0-beta.3",
   "description": "A Dependency Injection library",
   "main": "dist/amd/index.js",
   "module": "./dist/esm5/index.js",

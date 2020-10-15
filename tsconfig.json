@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["ES2015.Symbol", "DOM", "ES5", "ScriptHost"],
+    "lib": ["ES2015.Symbol", "DOM", "ES5", "ScriptHost", "ES2015"],
     "outDir": "dist/",
     "types": ["reflect-metadata", "jest", "requirejs"],
     "experimentalDecorators": true,

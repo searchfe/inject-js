@@ -12,6 +12,9 @@ define([
             console.log('depends:', queryInfo);
             console.log('log init');
         }
+        LogService.prototype.destroy = function () {
+            console.log('log destroy');
+        }
         LogService = tslib_1.__decorate([
             index_1.injectable,
             tslib_1.__metadata('design:paramtypes', [queryInfo_service_1.QueryInfo])

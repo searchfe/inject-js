@@ -2,7 +2,8 @@ define(['dist/amd/index', './module/log.service', './module/queryInfo.service'],
     const di = new inject.Container();
     di.addService(log.LogService);
     di.addService(queryInfo.QueryInfo);
-    console.log(log);
     di.create(log.LogService);
-    return '1';
+    di.destroy();
+    console.log(di);
+    return di;
 });

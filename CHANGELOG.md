@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/searchfe/inject-js/compare/v1.3.0...v1.3.1) (2020-10-16)
+
+
+### Bug Fixes
+
+* 修复拓扑排序图推入错误问题 ([10dfcf8](https://github.com/searchfe/inject-js/commit/10dfcf803b5faa7775136189c60bc7810125438d))
+
 # [1.3.0](https://github.com/searchfe/inject-js/compare/v1.2.1...v1.3.0) (2020-10-15)
 
 

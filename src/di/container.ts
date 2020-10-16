@@ -88,7 +88,8 @@ export class Container {
             const degreeVal: number = inDegree.get(this.prerequisites[i][0]);
             inDegree.set(this.prerequisites[i][0], degreeVal + 1);
             if (graph.get(this.prerequisites[i][1])) {
-                const nowGraph = graph.get(this.prerequisites[i][1]).push(this.prerequisites[i][0]);
+                const nowGraph = graph.get(this.prerequisites[i][1]);
+                nowGraph.push(this.prerequisites[i][0]);
                 graph.set(this.prerequisites[i][1], nowGraph);
             } else {
                 graph.set(this.prerequisites[i][1], [this.prerequisites[i][0]]);

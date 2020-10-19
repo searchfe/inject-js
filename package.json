@@ -14,7 +14,7 @@
     "build": "gulp build",
     "prepublish": "npm run build",
     "coverage": "jest --coverage",
-    "coveralls": "jest --coverage && cat coverage/lcov.info | coveralls",
+    "coveralls": "jest --coverage && cat coverage/lcov.info | npx coveralls",
     "watch": "gulp watch",
     "watch:dev": "cross-env NODE_ENV=development gulp watch",
     "semantic-release": "semantic-release",

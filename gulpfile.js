@@ -81,7 +81,7 @@ gulp.task('deploy', () => {
 gulp.task('deploy:project', () => {
     const packages = require('./dev.config.js').packages;
     if (packages) {
-        let out = gulp.src(['dist/**/*'])
+        let out = gulp.src(['dist/**/*']);
         packages.forEach(package => {
             const path = resolve(package, '@baidu/molecule/dist');
             console.log(`=> ${path}`);

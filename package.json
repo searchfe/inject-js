@@ -8,11 +8,13 @@
   "scripts": {
     "test": "jest",
     "demo": "ts-node demo",
-    "lint": "eslint 'src/**/*.ts' '*.ts'",
+    "lint": "eslint 'src/**/*.ts' '*.ts' '*.js'",
     "deploy": "gulp deploy",
+    "docs": "typedoc --out docs src && touch docs/.nojekyll",
     "build": "gulp build",
     "prepublish": "npm run build",
-    "coveralls": "jest --coverage",
+    "coverage": "jest --coverage",
+    "coveralls": "jest --coverage && cat coverage/lcov.info | coveralls",
     "watch": "gulp watch",
     "watch:dev": "cross-env NODE_ENV=development gulp watch",
     "semantic-release": "semantic-release",
@@ -74,7 +76,8 @@
     "typescript": "^3.4.5"
   },
   "dependencies": {
-    "http-server": "^0.12.3"
+    "http-server": "^0.12.3",
+    "typedoc": "^0.19.2"
   },
   "release": {
     "branch": "master",

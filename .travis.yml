@@ -1,12 +1,26 @@
 language: node_js
 node_js:
   - lts/*
-branches:
-  only:
-  - master
-install:
-  - npm install
-script:
-  - npm run build
-after_success:
-  - npx semantic-release
+jobs:
+  include:
+    - stage: test
+      name: 'Linting'
+      script: npm run lint
+    - name: 'Coverage'
+      script: npm run coveralls
+    - state: release
+      name: 'Publish'
+      if: branch = master
+      script: npm run build
+      deploy:
+        provider: script
+        skip_cleanup: true
+        script: npx semantic-release
+    - name: 'Document'
+      if: branch = master
+      script: npm run docs
+      deploy:
+        skip_cleanup: true
+        provider: pages
+        github_token: $GH_TOKEN
+        local_dir: docs

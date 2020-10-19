@@ -6,6 +6,11 @@ import { Map } from '../utils/map';
 import { InjectToken } from './inject-token';
 import { getDependencies, setDependencies } from './dependency';
 
+/**
+ * 依赖注入容器
+ *
+ * 根据控制反转的概念： [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control) (IoC)，Container 作为控制反转的容器，当你给容器提供一个 token 时，容器会自动的根据这个 token 值去注入对应的依赖，而这需要 `@inject` 和 `@injectable` 去生成 metadata。
+ */
 export class Container {
     private providers: Map
     private providerClasses: Map
@@ -41,22 +46,34 @@ export class Container {
         return service;
     }
 
+    /**
+     * 为该容器注册一个 Service Class，它的依赖会被自动解决，inject-js 也会创建它的实例注入给别人。
+     */
     public addService (Svc: any) {
         const P = createServiceProvider(Svc);
         return this.addProvider(Svc, P);
     }
 
+    /**
+     * 为该容器注册一个 Factory，即可以返回 Service 实例的函数。
+     */
     public addFactory (token: InjectToken, f: Function, deps: InjectToken[]) {
         setDependencies(deps, f);
         const P = createFactoryProvider(f);
         return this.addProvider(token, P);
     }
 
+    /**
+     * 为该容器注册一个具体的值。可以是一个类的实例，也可以是基本类型。通常标识容器的一些配置。
+     */
     public addValue (token: InjectToken, value: any) {
         const P = createValueProvider(value);
         return this.addProvider(token, P);
     }
 
+    /**
+     * 为该容器注册一个 provider，每个 provider 需要提供 create 初始化方法，返回该 provider 注入的依赖。
+     */
     public addProvider (token: InjectToken, P: any) {
         if (!isProvider(P)) {
             throw new Error(`invalid provider for "${token}"`);
@@ -120,6 +137,9 @@ export class Container {
         return result;
     }
 
+    /**
+     * 销毁容器，以及容器里的所有 service，并调用所有 service 的 `destroy()` 方法（如果存在定义的话）。inject-js 会去分析已创建的所有 Service 实例，按照依赖的拓扑顺序，逆序小伙。如：A 依赖 B，B 依赖 C，则按照 A => B => C 的顺序依次调用它们的 destroy 方法。
+     */
     public destroy () {
         const providers = this.getSortedList();
         for (let index = providers.length - 1; index >= 0; index--) {

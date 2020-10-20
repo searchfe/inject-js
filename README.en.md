@@ -46,7 +46,7 @@ import { injectable } from 'inject-js';
 import { Wheel } from './wheel';
 
 @injectable
-class Car {
+export class Car {
     constructor(private wheel: Wheel) {}
 }
 
@@ -54,7 +54,7 @@ class Car {
 import { injectable } from 'inject-js';
 
 @injectable
-class Wheel {
+export class Wheel {
     constructor() {}
 }
 
@@ -78,7 +78,7 @@ import { inject } from 'inject-js';
 import { Wheel } from './wheel';
 
 @injectable
-class Car {
+export class Car {
     constructor(@inject('Wheel') private wheel: Wheel) {}
 }
 

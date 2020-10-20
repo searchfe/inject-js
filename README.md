@@ -46,7 +46,7 @@ import { injectable } from 'inject-js';
 import { Wheel } from './wheel';
 
 @injectable
-class Car {
+export class Car {
     constructor(private wheel: Wheel) {}
 }
 
@@ -54,7 +54,7 @@ class Car {
 import { injectable } from 'inject-js';
 
 @injectable
-class Wheel {
+export class Wheel {
     constructor() {}
 }
 
@@ -80,7 +80,7 @@ import { inject } from 'inject-js';
 import { Wheel } from './wheel';
 
 @injectable
-class Car {
+export class Car {
     constructor(@inject('Wheel') private wheel: Wheel) {}
 }
 
@@ -124,6 +124,14 @@ container.addService(FooService)
 * [.addFactory()][addFactory]：注册一个会返回 Service 实例的方法（工厂方法）。
 * [.addService()][addService]：注册一个具体的 Service 类。
 * [.addValue()][addValue]：注册一个具体的值。
+
+## 示例
+
+在 demo 下包含了一个使用 inject-js 的示例。可以按以下步骤执行该示例：
+
+1. 进入 inject-js 项目根目录。
+1. 构建 inject-js：`npm install && npm run build`。
+2. 执行 demo：`npm run demo`。
 
 [API]: https://searchfe.github.io/inject-js/
 [container]: https://searchfe.github.io/inject-js/classes/_di_container_.container.html

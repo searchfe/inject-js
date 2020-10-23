@@ -6,4 +6,7 @@ export class Car {
     constructor (private wheel: Wheel) {
         console.log('Car created');
     }
+    public destroy () {
+        console.log('Car destroy');
+    }
 }

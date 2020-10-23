@@ -16,17 +16,26 @@ export class Container {
     private providerClasses: Map
     private services: any[] = [];
     private prerequisites: any[][] = [];
+    public childContainers: Container[] = [];
+    public parent: Container;
 
-    constructor () {
+    constructor (parent?: Container) {
+        this.parent = parent;
         this.providers = new Map();
         this.providerClasses = new Map();
+    }
+
+    public createChildContainer () {
+        const childContainer = new Container(this);
+        this.childContainers.push(childContainer);
+        return childContainer;
     }
 
     public getOrCreateProvider (fn: InjectToken) {
         let provider = this.providers.get(fn);
         if (provider) return provider;
 
-        const ProviderClass = this.providerClasses.get(fn);
+        const ProviderClass = this.providerClasses.get(fn) || this.parent?.providerClasses.get(fn);
         if (!ProviderClass) {
             throw new Error(`provider for ${fn} not found`);
         }
@@ -141,6 +150,15 @@ export class Container {
      * 销毁容器，以及容器里的所有 service，并调用所有 service 的 `destroy()` 方法（如果存在定义的话）。inject-js 会去分析已创建的所有 Service 实例，按照依赖的拓扑顺序，逆序小伙。如：A 依赖 B，B 依赖 C，则按照 A => B => C 的顺序依次调用它们的 destroy 方法。
      */
     public destroy () {
+        if (this.childContainers.length > 0) {
+            for (let index = 0; index < this.childContainers.length; index++) {
+                const child = this.childContainers[index];
+                child.destroy();
+            }
+        }
+        if (this.providers.size === 0) {
+            return;
+        }
         const providers = this.getSortedList();
         for (let index = providers.length - 1; index >= 0; index--) {
             const element = providers[index];

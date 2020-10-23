@@ -34,20 +34,90 @@ describe('Container', () => {
 
             expect(di.create(Foo).bar.coo).toBeInstanceOf(Coo);
         });
+        it('创建未注册的provider抛出异常', () => {
+            const di = new Container()
+            class Coo { }
+            const t = () => { di.getOrCreateProvider(Coo); }
+            expect(t).toThrow(Error);
+        })
+    });
+    describe('#createChildContainer', () => {
+        it('支持创建子容器', () => {
+            const di = new Container();
+            const child = di.createChildContainer();
+
+            expect(child.parent).toEqual(di);
+        });
+        it('子容器可创建父容器的service', () => {
+            const di = new Container();
+            @service(di)
+            class Bar { }
+            const child = di.createChildContainer();
+
+            expect(child.create(Bar)).toBeInstanceOf(Bar);
+        });
+        it('子容器可依赖父容器的service', () => {
+            const di = new Container();
+            @service(di)
+            class Bar { }
+            const child = di.createChildContainer();
+            @service(child)
+            class Coo { }
+            @service(child)
+            class Dog { constructor(public bar: Bar) { }  }
+
+            expect(child.create(Dog).bar).toBeInstanceOf(Bar);
+        });
+        it('父容器销毁', () => {
+            const mockDestroy = jest.fn();
+            const di = new Container();
+            @service(di)
+            class Bar {
+                public destroy = mockDestroy
+            }
+            const child = di.createChildContainer();
+            @service(child)
+            class Coo {
+                public destroy () {
+                }
+            }
+            @service(child)
+            class Dog {
+                constructor(public bar: Bar) {}
+                public destroy = mockDestroy
+            }
+
+            class Egg {
+                public destroy() {}
+            }
+            child.addFactory("Egg", () => new Egg(), []);
+
+            di.create(Bar);
+            child.create(Dog);
+            child.create("Egg");
+
+            di.destroy();
+
+            expect(mockDestroy.mock.instances[0]).toBeInstanceOf(Dog);
+            expect(mockDestroy.mock.instances[1]).toBeInstanceOf(Bar);
+        })
+        
     });
     describe('#destroy', () => {
         it('分析依赖排序', () => {
             const di = new Container()
             @service(di)
+            class Air { }
+            @service(di)
             class Coo { }
             @service(di)
-            class Bar { constructor(public coo: Coo) { } }
+            class Bar { constructor(public coo: Coo, public air: Air) { } }
             @service(di)
             class Dog { }
             @service(di)
-            class Foo { constructor(public bar: Bar, public dog: Dog) { } }
+            class Foo { constructor(public air: Air, public bar: Bar, public dog: Dog) { } }
             di.create(Foo);
-            expect(di.getSortedList()).toEqual([Coo, Dog, Bar, Foo]);
+            expect(di.getSortedList()).toEqual([Air, Coo, Dog, Bar, Foo]);
         });
         
         it('可调用destroy方法', () => {
@@ -62,8 +132,30 @@ describe('Container', () => {
             di.create(Foo);
             di.destroy();
             expect(di.getServices()).toEqual([]);
-        })
+        });
+
+        it('destroy方法不被重复调用', () => {
+            const di = new Container();
+            const mockDestroy = jest.fn();
+            class Foo {
+                constructor() { }
+                public destroy = mockDestroy
+            }
+            di.addService(Foo);
+            di.create(Foo);
+            di.destroy();
+            di.destroy();
+            expect(mockDestroy.mock.instances.length).toEqual(1);
+        });
     });
+    describe('#getTokens', () => {
+        it('支持获取provider token', () => {
+            const di = new Container();
+            class Foo { }
+            di.addService(Foo);
+            expect(di.getTokens()).toEqual([Foo]);
+        })
+    })
     describe('#addService', () => {
         it('支持 addService', () => {
             const di = new Container();
@@ -97,6 +189,15 @@ describe('Container', () => {
             di.addProvider(token, FooProvider);
             expect(di.create(token)).toEqual('FOO');
         });
+
+        it('传入不符合规范的provider抛出异常', () => {
+            const di = new Container();
+            class FooProvider { }
+            const t = () => {
+                di.addProvider('foo', FooProvider);
+            }
+            expect(t).toThrowError();
+        })
 
         it('调用 addProvider 时传递 container 和 parent', () => {
             const di = new Container();

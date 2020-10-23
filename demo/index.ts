@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { Container } from '../dist/cjs/index.js';
+import { Container } from '../src/index';
 import { Car } from './car.service';
 import { Wheel } from './wheel.service';
 
@@ -8,3 +8,5 @@ di.addService(Car);
 di.addService(Wheel);
 
 const car = di.create(Car);
+
+di.destroy();

@@ -4,7 +4,6 @@
 export class Map {
   private _keys: any[] = []
   private _values: any[] = []
-  public size: number = 0
 
   set (key: any, value: any) {
       for (let i = 0; i < this._keys.length; i++) {
@@ -15,7 +14,6 @@ export class Map {
       }
       this._keys.push(key);
       this._values.push(value);
-      this.size++;
   }
 
   get (key) {
@@ -28,7 +26,6 @@ export class Map {
   clear () {
       this._keys = [];
       this._values = [];
-      this.size = 0;
   }
 
   keys (callbackFn) {

@@ -1,4 +1,4 @@
-import { injectable } from '../dist/cjs/index.js';
+import { injectable } from '../src/index';
 import { Wheel } from './wheel.service';
 
 @injectable

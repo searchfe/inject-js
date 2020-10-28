@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/searchfe/inject-js/compare/v1.3.1...v1.4.0) (2020-10-23)
+
+
+### Features
+
+* 增加父子容器 ([#4](https://github.com/searchfe/inject-js/issues/4)) ([afc4605](https://github.com/searchfe/inject-js/commit/afc4605c5a5333e86e9a7f675da54cb9dd4b142e))
+
 ## [1.3.1](https://github.com/searchfe/inject-js/compare/v1.3.0...v1.3.1) (2020-10-16)
 
 

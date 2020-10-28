@@ -36,10 +36,9 @@ export class Container {
         if (provider) return provider;
 
         const ProviderClass = this.providerClasses.get(fn);
-        if (!ProviderClass && this.parent) {
+        if (!ProviderClass) {
+            if (!this.parent) throw new Error(`provider for ${fn} not found`);
             return this.parent.getOrCreateProvider(fn);
-        } else if (!ProviderClass && !this.parent) {
-            throw new Error(`provider for ${fn} not found`);
         }
         const deps = ProviderClass.dependencies().map(dep => {
             // 先决数组中不包括父容器的provider

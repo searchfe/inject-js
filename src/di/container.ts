@@ -35,12 +35,14 @@ export class Container {
         let provider = this.providers.get(fn);
         if (provider) return provider;
 
-        const ProviderClass = this.providerClasses.get(fn) || this.parent?.providerClasses.get(fn);
+        const ProviderClass = this.providerClasses.get(fn);
         if (!ProviderClass) {
-            throw new Error(`provider for ${fn} not found`);
+            if (!this.parent) throw new Error(`provider for ${fn} not found`);
+            return this.parent.getOrCreateProvider(fn);
         }
         const deps = ProviderClass.dependencies().map(dep => {
-            this.prerequisites.push([fn, dep]);
+            // 先决数组中不包括父容器的provider
+            this.providerClasses.get(dep) && this.prerequisites.push([fn, dep]);
             return this.create(dep, fn);
         });
         provider = new ProviderClass(...deps);

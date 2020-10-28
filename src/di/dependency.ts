@@ -1,12 +1,10 @@
 import { InjectToken } from './inject-token';
 
 export function setDependencies (deps: InjectToken[], fn: InjectToken) {
-    if (typeof fn !== 'function') return;
     Reflect.defineMetadata('design:paramtypes', deps, fn);
 }
 
 export function setNthDependency (dep: InjectToken, nth: number, fn: InjectToken) {
-    if (typeof fn !== 'function') return;
     const key = 'design:paramtokens:' + nth;
     Reflect.defineMetadata(key, dep, fn);
 }

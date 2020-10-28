@@ -58,15 +58,22 @@ describe('Container', () => {
         });
         it('子容器可依赖父容器的service', () => {
             const di = new Container();
-            @service(di)
-            class Bar { }
+            di.addValue('air', 1);
+            @injectable
+            class Bar {
+                public num: number;
+                constructor(
+                    @inject('air') num: number
+                ) {
+                    this.num = num;
+                }
+            }
+            di.addService(Bar);
             const child = di.createChildContainer();
-            @service(child)
-            class Coo { }
+            child.addValue('air', 2);
             @service(child)
             class Dog { constructor(public bar: Bar) { }  }
-
-            expect(child.create(Dog).bar).toBeInstanceOf(Bar);
+            expect(child.create(Dog).bar.num).toEqual(1);
         });
         it('父容器销毁', () => {
             const mockDestroy = jest.fn();

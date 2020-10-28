@@ -1,3 +1,17 @@
+# [1.5.0](https://github.com/searchfe/inject-js/compare/v1.4.0...v1.5.0) (2020-10-28)
+
+
+### Bug Fixes
+
+* 修复子容器调用父容器provider不正确的问题 ([0f0fc34](https://github.com/searchfe/inject-js/commit/0f0fc34d228305bd582d5d4e778f52dc073ca45e))
+* 去除冗余逻辑 ([406fbe7](https://github.com/searchfe/inject-js/commit/406fbe794dfdd77a9a2e4f3cbfdc755fce4a49d2))
+* 去除冗余逻辑 ([bd2bd89](https://github.com/searchfe/inject-js/commit/bd2bd897cfae694da7ada455514aedfcc100f028))
+
+
+### Features
+
+* 增加父子容器 ([d8ee64a](https://github.com/searchfe/inject-js/commit/d8ee64a7b87f89722a20e113a3393250b311e0d5))
+
 # [1.4.0](https://github.com/searchfe/inject-js/compare/v1.3.1...v1.4.0) (2020-10-23)
 
 

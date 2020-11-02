@@ -4,28 +4,28 @@ import { getDependencies } from './dependency';
 
 export function createFactoryProvider (factory: Function) {
     return class FactoryProviderImpl implements Provider {
-    instance: any = null
-    args: any[]
+        instance: any = null
+        args: any[]
 
-    constructor (...args) {
-        this.args = args;
-    }
-
-    create () {
-        if (!this.instance) {
-            this.instance = factory(...this.args);
+        constructor (...args) {
+            this.args = args;
         }
-        return this.instance;
-    }
 
-    destroy () {
-        if (typeof this.instance.destroy === 'function') {
-            this.instance.destroy();
+        create () {
+            if (!this.instance) {
+                this.instance = factory(...this.args);
+            }
+            return this.instance;
         }
-    }
 
-    static dependencies (): InjectToken[] {
-        return getDependencies(factory);
-    }
+        destroy () {
+            if (typeof this.instance.destroy === 'function') {
+                this.instance.destroy();
+            }
+        }
+
+        static dependencies (): InjectToken[] {
+            return getDependencies(factory);
+        }
     };
 }

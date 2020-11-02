@@ -14,7 +14,7 @@ describe('Container', () => {
             expect(di.create(Foo)).toBeInstanceOf(Foo);
         });
         it('支持解析依赖', () => {
-            const di = new Container()
+            const di = new Container();
             class Bar {}
             di.addService(Bar);
             @injectable
@@ -24,7 +24,7 @@ describe('Container', () => {
             expect(foo.bar).toBeInstanceOf(Bar);
         });
         it('支持解析递归依赖', () => {
-            const di = new Container()
+            const di = new Container();
             @service(di)
             class Coo {}
             @service(di)
@@ -35,11 +35,11 @@ describe('Container', () => {
             expect(di.create(Foo).bar.coo).toBeInstanceOf(Coo);
         });
         it('创建未注册的provider抛出异常', () => {
-            const di = new Container()
+            const di = new Container();
             class Coo { }
-            const t = () => { di.getOrCreateProvider(Coo); }
+            const t = () => { di.getOrCreateProvider(Coo); };
             expect(t).toThrow(Error);
-        })
+        });
     });
     describe('#createChildContainer', () => {
         it('支持创建子容器', () => {
@@ -62,7 +62,7 @@ describe('Container', () => {
             @injectable
             class Bar {
                 public num: number;
-                constructor(
+                constructor (
                     @inject('air') num: number
                 ) {
                     this.num = num;
@@ -72,7 +72,7 @@ describe('Container', () => {
             const child = di.createChildContainer();
             child.addValue('air', 2);
             @service(child)
-            class Dog { constructor(public bar: Bar) { }  }
+            class Dog { constructor (public bar: Bar) { } }
             expect(child.create(Dog).bar.num).toEqual(1);
         });
         it('父容器销毁', () => {
@@ -85,51 +85,49 @@ describe('Container', () => {
             const child = di.createChildContainer();
             @service(child)
             class Coo {
-                public destroy () {
-                }
+                public destroy () {}
             }
             @service(child)
             class Dog {
-                constructor(public bar: Bar) {}
+                constructor (public bar: Bar) {}
                 public destroy = mockDestroy
             }
 
             class Egg {
-                public destroy() {}
+                public destroy () {}
             }
-            child.addFactory("Egg", () => new Egg(), []);
+            child.addFactory('Egg', () => new Egg(), []);
 
             di.create(Bar);
             child.create(Dog);
-            child.create("Egg");
+            child.create('Egg');
 
             di.destroy();
 
             expect(mockDestroy.mock.instances[0]).toBeInstanceOf(Dog);
             expect(mockDestroy.mock.instances[1]).toBeInstanceOf(Bar);
-        })
-        
+        });
     });
     describe('#destroy', () => {
         it('分析依赖排序', () => {
-            const di = new Container()
+            const di = new Container();
             @service(di)
             class Air { }
             @service(di)
             class Coo { }
             @service(di)
-            class Bar { constructor(public coo: Coo, public air: Air) { } }
+            class Bar { constructor (public coo: Coo, public air: Air) { } }
             @service(di)
             class Dog { }
             @service(di)
-            class Foo { constructor(public air: Air, public bar: Bar, public dog: Dog) { } }
+            class Foo { constructor (public air: Air, public bar: Bar, public dog: Dog) { } }
             di.create(Foo);
             expect(di.getSortedList()).toEqual([Air, Coo, Dog, Bar, Foo]);
         });
-        
+
         it('可调用destroy方法', () => {
             const di = new Container();
-            class Foo { 
+            class Foo {
                 constructor () {}
                 public destroy () {
                     return 'destroy';
@@ -145,7 +143,7 @@ describe('Container', () => {
             const di = new Container();
             const mockDestroy = jest.fn();
             class Foo {
-                constructor() { }
+                constructor () { }
                 public destroy = mockDestroy
             }
             di.addService(Foo);
@@ -154,6 +152,17 @@ describe('Container', () => {
             di.destroy();
             expect(mockDestroy.mock.instances.length).toEqual(1);
         });
+
+        it('没有 destroy 方法的 Service 直接跳过，不抛出异常', () => {
+            const di = new Container();
+            class FooProvider {
+                constructor () {}
+                create () { return {}; }
+            }
+            di.addProvider('Foo', FooProvider);
+            di.create('Foo');
+            expect(() => di.destroy()).not.toThrow();
+        });
     });
     describe('#getTokens', () => {
         it('支持获取provider token', () => {
@@ -161,8 +170,8 @@ describe('Container', () => {
             class Foo { }
             di.addService(Foo);
             expect(di.getTokens()).toEqual([Foo]);
-        })
-    })
+        });
+    });
     describe('#addService', () => {
         it('支持 addService', () => {
             const di = new Container();
@@ -202,9 +211,9 @@ describe('Container', () => {
             class FooProvider { }
             const t = () => {
                 di.addProvider('foo', FooProvider);
-            }
+            };
             expect(t).toThrowError();
-        })
+        });
 
         it('调用 addProvider 时传递 container 和 parent', () => {
             const di = new Container();
@@ -219,7 +228,7 @@ describe('Container', () => {
             @injectable
             class FooProvider { // eslint-disable-line
                 create (container, parent) {
-                    return { container, parent }
+                    return { container, parent };
                 }
             }
             di.addProvider(Foo, FooProvider);
@@ -229,19 +238,19 @@ describe('Container', () => {
         });
 
         it('入口 Provider/Molecule parent 参数为 null', () => {
-            const di = new Container()
+            const di = new Container();
             class Foo {}
 
             @injectable
             class FooProvider { // eslint-disable-line
                 create (container, parent) {
-                return { container, parent }
+                    return { container, parent };
                 }
             }
-            di.addProvider(Foo, FooProvider)
-            const foo = di.create(Foo)
-            expect(foo.container).toEqual(di)
-            expect(foo.parent).toEqual(null)
+            di.addProvider(Foo, FooProvider);
+            const foo = di.create(Foo);
+            expect(foo.container).toEqual(di);
+            expect(foo.parent).toEqual(null);
         });
 
         it('支持 @inject 装饰器', () => {
@@ -267,6 +276,6 @@ describe('Container', () => {
             const { foo } = di.create(EntryService);
             expect(foo.container).toEqual(di);
             expect(foo.parent).toEqual(EntryService);
-        })
-  })
-})
+        });
+    });
+});

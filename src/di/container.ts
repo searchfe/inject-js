@@ -159,7 +159,7 @@ export class Container {
         for (let index = providers.length - 1; index >= 0; index--) {
             const element = providers[index];
             const thisProvider = this.providers.get(element);
-            if (thisProvider.destroy && typeof thisProvider.destroy === 'function') {
+            if (typeof thisProvider.destroy === 'function') {
                 thisProvider.destroy();
             }
         }

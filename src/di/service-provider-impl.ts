@@ -2,7 +2,7 @@ import { Provider } from './provider';
 import { InjectToken } from './inject-token';
 import { getDependencies } from './dependency';
 
-export function createServiceProvider (Svc: (...args: any[]) => void) {
+export function createServiceProvider (Svc: { new(...args: any[]): any }) {
     return class ServiceProviderImpl implements Provider {
         instance: any = null
         args: any[]

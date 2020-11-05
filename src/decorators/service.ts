@@ -1,4 +1,5 @@
 import { Container } from '../di/container';
+import { ServiceClass } from '../di/provider';
 
 /**
  * 标明一个 Service，例如：
@@ -12,7 +13,7 @@ import { Container } from '../di/container';
  * container.addService(FooService)
  */
 export function service (di: Container) {
-    return function service (Fn: Function) {
+    return function service (Fn: ServiceClass) {
         di.addService(Fn);
     };
 }

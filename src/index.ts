@@ -2,6 +2,7 @@ import { Container } from './di/container';
 import { injectable } from './decorators/injectable';
 import { inject } from './decorators/inject';
 import { setDependencies, getDependencies, setNthDependency } from './di/dependency';
+import { createInjectToken } from './di/inject-token';
 
 export {
     Container,
@@ -9,5 +10,6 @@ export {
     inject,
     setDependencies,
     getDependencies,
-    setNthDependency
+    setNthDependency,
+    createInjectToken
 };

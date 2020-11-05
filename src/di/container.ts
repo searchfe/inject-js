@@ -1,4 +1,4 @@
-import { isProvider } from './provider';
+import { isProviderClass, Service, ProviderClass, ServiceClass, Factory } from './provider';
 import { createValueProvider } from './value-provider-impl';
 import { createServiceProvider } from './service-provider-impl';
 import { createFactoryProvider } from './factory-provider-impl';
@@ -14,7 +14,7 @@ import { getDependencies, setDependencies } from './dependency';
 export class Container {
     private providers: Map
     private providerClasses: Map
-    private services: any[] = [];
+    private services: Service[] = [];
     private prerequisites: any[][] = [];
     public childContainers: Container[] = [];
     public parent?: Container;
@@ -60,37 +60,37 @@ export class Container {
     /**
      * 为该容器注册一个 Service Class，它的依赖会被自动解决，inject-js 也会创建它的实例注入给别人。
      */
-    public addService (Svc: any) {
-        const P = createServiceProvider(Svc);
+    public addService<T> (Svc: ServiceClass<T>) {
+        const P = createServiceProvider<T>(Svc);
         return this.addProvider(Svc, P);
     }
 
     /**
      * 为该容器注册一个 Factory，即可以返回 Service 实例的函数。
      */
-    public addFactory (token: InjectToken, f: Function, deps: InjectToken[]) {
+    public addFactory<T> (token: InjectToken<T>, f: Factory<T>, deps: InjectToken[]) {
         setDependencies(deps, f);
-        const P = createFactoryProvider(f);
+        const P = createFactoryProvider<T>(f);
         return this.addProvider(token, P);
     }
 
     /**
      * 为该容器注册一个具体的值。可以是一个类的实例，也可以是基本类型。通常标识容器的一些配置。
      */
-    public addValue (token: InjectToken, value: any) {
-        const P = createValueProvider(value);
+    public addValue<T> (token: InjectToken<T>, value: T) {
+        const P = createValueProvider<T>(value);
         return this.addProvider(token, P);
     }
 
     /**
      * 为该容器注册一个 provider，每个 provider 需要提供 create 初始化方法，返回该 provider 注入的依赖。
      */
-    public addProvider (token: InjectToken, P: any) {
-        if (!isProvider(P)) {
+    public addProvider<T> (token: InjectToken<T>, P: ProviderClass<T>) {
+        if (!isProviderClass(P)) {
             throw new Error(`invalid provider for "${token}"`);
         }
-        if (!(<any>P).dependencies) {
-            (<any>P).dependencies = () => getDependencies(P);
+        if (!P.dependencies) {
+            P.dependencies = () => getDependencies(P);
         }
         this.providerClasses.set(token, P);
     }

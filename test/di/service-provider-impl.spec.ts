@@ -12,7 +12,7 @@ describe('ServiceProviderImpl', () => {
             class Foo {}
             const Provider = createServiceProvider(Foo);
             const p = new Provider();
-            const [a, b] = p.create();
+            const [a, b] = [p.create(), p.create()];
             expect(a).toEqual(b);
         });
     });

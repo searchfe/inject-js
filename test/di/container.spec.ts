@@ -1,9 +1,10 @@
 import 'reflect-metadata';
-import { InjectToken } from '../../src/di/inject-token';
+import { InjectToken, createInjectToken } from '../../src/di/inject-token';
 import { service } from '../../src/decorators/service';
 import { inject } from '../../src/decorators/inject';
 import { injectable } from '../../src/decorators/injectable';
 import { Container } from '../../src/di/container';
+import { Provider, ProviderClass } from '../../src/di/provider';
 
 describe('Container', () => {
     describe('#create', () => {
@@ -58,19 +59,20 @@ describe('Container', () => {
         });
         it('子容器可依赖父容器的service', () => {
             const di = new Container();
-            di.addValue('air', 1);
+            const token = createInjectToken();
+            di.addValue(token, 1);
             @injectable
             class Bar {
                 public num: number;
                 constructor (
-                    @inject('air') num: number
+                    @inject(token) num: number
                 ) {
                     this.num = num;
                 }
             }
             di.addService(Bar);
             const child = di.createChildContainer();
-            child.addValue('air', 2);
+            child.addValue(token, 2);
             @service(child)
             class Dog { constructor (public bar: Bar) { } }
             expect(child.create(Dog).bar.num).toEqual(1);
@@ -96,11 +98,12 @@ describe('Container', () => {
             class Egg {
                 public destroy () {}
             }
-            child.addFactory('Egg', () => new Egg(), []);
+            const EGG_TOKEN = createInjectToken<Egg>();
+            child.addFactory(EGG_TOKEN, () => new Egg(), []);
 
             di.create(Bar);
             child.create(Dog);
-            child.create('Egg');
+            child.create(EGG_TOKEN);
 
             di.destroy();
 
@@ -159,8 +162,9 @@ describe('Container', () => {
                 constructor () {}
                 create () { return {}; }
             }
-            di.addProvider('Foo', FooProvider);
-            di.create('Foo');
+            const token = createInjectToken();
+            di.addProvider(token, FooProvider);
+            di.create(token);
             expect(() => di.destroy()).not.toThrow();
         });
     });
@@ -170,6 +174,13 @@ describe('Container', () => {
             class Foo { }
             di.addService(Foo);
             expect(di.getTokens()).toEqual([Foo]);
+        });
+
+        it('生成 Token 且唯一', () => {
+            class Foo {};
+            const FOO_TOKEN = createInjectToken<Foo>();
+            const WILDCARD_TOKEN = createInjectToken();
+            expect(FOO_TOKEN === WILDCARD_TOKEN).toBe(false);
         });
     });
     describe('#addService', () => {
@@ -183,7 +194,7 @@ describe('Container', () => {
     describe('#addValue', () => {
         it('支持 addValue', () => {
             const di = new Container();
-            const token = Symbol('foo');
+            const token = createInjectToken();
             di.addValue(token, 'this is the value');
             expect(di.create(token)).toEqual('this is the value');
         });
@@ -191,7 +202,7 @@ describe('Container', () => {
     describe('#addFactory', () => {
         it('支持 addFactory', () => {
             const di = new Container();
-            const token = Symbol('foo');
+            const token = createInjectToken();
             di.addFactory(token, () => 'FOO', []);
             const bar = di.create(token);
             expect(bar).toEqual('FOO');
@@ -199,7 +210,7 @@ describe('Container', () => {
     });
     describe('#addProvider', () => {
         it('支持 addProvider', () => {
-            const token = Symbol('foo');
+            const token = createInjectToken();
             const di = new Container();
             class FooProvider { create () { return 'FOO'; } }
             di.addProvider(token, FooProvider);
@@ -207,12 +218,40 @@ describe('Container', () => {
         });
 
         it('传入不符合规范的provider抛出异常', () => {
+            const token = createInjectToken();
             const di = new Container();
             class FooProvider { }
             const t = () => {
-                di.addProvider('foo', FooProvider);
+                di.addProvider(token, FooProvider as unknown as ProviderClass<any>);
             };
             expect(t).toThrowError();
+        });
+
+        it('传入的 Token 和 Provider 类型不一致时应该报类型错误', () => {
+            class Foo { private name = 'foo'; }
+            class FooProvider { create () { return new Foo(); } }
+            class Bar { private name = 'bar'; }
+            class BarProvider { create () { return new Bar(); } }
+            const FOO_TOKEN = createInjectToken<Foo>();
+            const WILDCARD_TOKEN = createInjectToken();
+            const di = new Container();
+            // 下面被注释掉的行都是会报类型错误的
+            // 测试 addProvider
+            // di.addProvider('123', BarProvider);
+            di.addProvider(WILDCARD_TOKEN, BarProvider);
+            // di.addProvider(Foo, BarProvider);
+            di.addProvider(Bar, BarProvider);
+            // di.addProvider(FOO_TOKEN, BarProvider);
+            di.addProvider(FOO_TOKEN, FooProvider);
+            // 测试 addFactory
+            di.addFactory(FOO_TOKEN, () => new Foo(), []);
+            // di.addFactory(FOO_TOKEN, () => new Bar(), []);
+            di.addFactory(Foo, () => new Foo(), []);
+            // di.addFactory(Foo, () => new Bar(), []);
+            // 测试 addValue
+            di.addValue(WILDCARD_TOKEN, 1);
+            // di.addValue(FOO_TOKEN, 1);
+            // di.addValue(Foo, 1);
         });
 
         it('调用 addProvider 时传递 container 和 parent', () => {
@@ -255,7 +294,7 @@ describe('Container', () => {
 
         it('支持 @inject 装饰器', () => {
             const di = new Container();
-            const token = Symbol('foo');
+            const token = createInjectToken<Foo>();
 
             interface Foo {
                 container: Container, parent: InjectToken

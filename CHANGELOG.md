@@ -1,3 +1,10 @@
+# [1.6.0](https://github.com/searchfe/inject-js/compare/v1.5.0...v1.6.0) (2020-11-05)
+
+
+### Features
+
+* export createInjectToken + validate token and provider ([be29504](https://github.com/searchfe/inject-js/commit/be2950453d4fd3dbff2dbf5ecbae31d5ecb00154))
+
 # [1.5.0](https://github.com/searchfe/inject-js/compare/v1.4.0...v1.5.0) (2020-10-28)
 
 

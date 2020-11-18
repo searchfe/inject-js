@@ -1,3 +1,10 @@
+## [1.6.1](https://github.com/searchfe/inject-js/compare/v1.6.0...v1.6.1) (2020-11-18)
+
+
+### Bug Fixes
+
+* 补充token类型产出 ([525ff04](https://github.com/searchfe/inject-js/commit/525ff04c6d4424eaf8a7f5bac7e0e9e5732d6cba))
+
 # [1.6.0](https://github.com/searchfe/inject-js/compare/v1.5.0...v1.6.0) (2020-11-05)
 
 

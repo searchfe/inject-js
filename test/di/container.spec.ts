@@ -1,4 +1,5 @@
 import 'reflect-metadata';
+import 'jest-extended';
 import { InjectToken, createInjectToken } from '../../src/di/inject-token';
 import { service } from '../../src/decorators/service';
 import { inject } from '../../src/decorators/inject';
@@ -112,22 +113,31 @@ describe('Container', () => {
         });
     });
     describe('#destroy', () => {
-        it('分析依赖排序', () => {
+        it('按拓扑序销毁', () => {
             const di = new Container();
+            const airDestroy = jest.fn();
+            const cooDestroy = jest.fn();
+            const barDestroy = jest.fn();
+            const dogDestroy = jest.fn();
+            const fooDestroy = jest.fn();
             @service(di)
-            class Air { }
+            class Air { destroy = airDestroy }
             @service(di)
-            class Coo { }
+            class Coo { destroy = cooDestroy }
             @service(di)
-            class Bar { constructor (public coo: Coo, public air: Air) { } }
+            class Bar { constructor (public coo: Coo, public air: Air) { } destroy = barDestroy }
             @service(di)
-            class Dog { }
+            class Dog { destroy = dogDestroy }
             @service(di)
-            class Foo { constructor (public air: Air, public bar: Bar, public dog: Dog) { } }
+            class Foo { constructor (public air: Air, public bar: Bar, public dog: Dog) { } destroy = fooDestroy }
             di.create(Foo);
-            expect(di.getSortedList()).toEqual([Air, Coo, Dog, Bar, Foo]);
-        });
+            expect(airDestroy).toHaveBeenCalledAfter(barDestroy);
+            expect(cooDestroy).toHaveBeenCalledAfter(barDestroy);
 
+            expect(airDestroy).toHaveBeenCalledAfter(fooDestroy);
+            expect(barDestroy).toHaveBeenCalledAfter(fooDestroy);
+            expect(dogDestroy).toHaveBeenCalledAfter(fooDestroy);
+        });
         it('可调用destroy方法', () => {
             const di = new Container();
             class Foo {
@@ -141,7 +151,6 @@ describe('Container', () => {
             di.destroy();
             expect(di.getServices()).toEqual([]);
         });
-
         it('destroy方法不被重复调用', () => {
             const di = new Container();
             const mockDestroy = jest.fn();
@@ -168,19 +177,12 @@ describe('Container', () => {
             expect(() => di.destroy()).not.toThrow();
         });
     });
-    describe('#getTokens', () => {
+    describe('#getTokens()', () => {
         it('支持获取provider token', () => {
             const di = new Container();
             class Foo { }
             di.addService(Foo);
             expect(di.getTokens()).toEqual([Foo]);
-        });
-
-        it('生成 Token 且唯一', () => {
-            class Foo {};
-            const FOO_TOKEN = createInjectToken<Foo>();
-            const WILDCARD_TOKEN = createInjectToken();
-            expect(FOO_TOKEN === WILDCARD_TOKEN).toBe(false);
         });
     });
     describe('#addService', () => {

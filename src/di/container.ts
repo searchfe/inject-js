@@ -1,10 +1,11 @@
-import { isProviderClass, Service, ProviderClass, ServiceClass, Factory } from './provider';
+import { Provider, isProviderClass, Service, ProviderClass, ServiceClass, Factory } from './provider';
 import { createValueProvider } from './value-provider-impl';
 import { createServiceProvider } from './service-provider-impl';
 import { createFactoryProvider } from './factory-provider-impl';
 import { Map } from '../utils/map';
 import { InjectToken } from './inject-token';
 import { getDependencies, setDependencies } from './dependency';
+import { Graph } from '../utils/graph';
 
 /**
  * 依赖注入容器
@@ -12,10 +13,10 @@ import { getDependencies, setDependencies } from './dependency';
  * 根据控制反转的概念： [Inversion of Control](https://en.wikipedia.org/wiki/Inversion_of_control) (IoC)，Container 作为控制反转的容器，当你给容器提供一个 token 时，容器会自动的根据这个 token 值去注入对应的依赖，而这需要 `@inject` 和 `@injectable` 去生成 metadata。
  */
 export class Container {
-    private providers: Map
-    private providerClasses: Map
+    private providers: Map<InjectToken, Provider<any>>
+    private providerClasses: Map<InjectToken, ProviderClass<any>>
     private services: Service[] = [];
-    private prerequisites: any[][] = [];
+    private graph = new Graph<InjectToken>();
     public childContainers: Container[] = [];
     public parent?: Container;
 
@@ -40,9 +41,10 @@ export class Container {
             if (!this.parent) throw new Error(`provider for ${fn} not found`);
             return this.parent.getOrCreateProvider(fn);
         }
+        this.graph.addVertex(fn);
         const deps = ProviderClass.dependencies().map(dep => {
             // 先决数组中不包括父容器的provider
-            this.providerClasses.get(dep) && this.prerequisites.push([fn, dep]);
+            if (this.providerClasses.has(dep)) this.graph.addEdge(fn, dep);
             return this.create(dep, fn);
         });
         provider = new ProviderClass(...deps);
@@ -96,56 +98,11 @@ export class Container {
     }
 
     public getTokens () {
-        const tokens: InjectToken[] = [];
-        this.providerClasses.keys(token => {
-            tokens.push(token);
-        });
-        return tokens;
+        return this.providerClasses.keys();
     }
 
     public getServices () {
         return this.services.slice();
-    }
-
-    public getSortedList () {
-        const inDegree = new Map();
-        const graph = new Map();
-        this.providers.keys((key) => inDegree.set(key, 0));
-        // 生成入度map和哈希表
-        for (let i = 0; i < this.prerequisites.length; i++) {
-            const degreeVal: number = inDegree.get(this.prerequisites[i][0]);
-            inDegree.set(this.prerequisites[i][0], degreeVal + 1);
-            if (graph.get(this.prerequisites[i][1])) {
-                const nowGraph = graph.get(this.prerequisites[i][1]);
-                nowGraph.push(this.prerequisites[i][0]);
-                graph.set(this.prerequisites[i][1], nowGraph);
-            } else {
-                graph.set(this.prerequisites[i][1], [this.prerequisites[i][0]]);
-            }
-        }
-        const result = [];
-        const queue = [];
-        inDegree.keys((key) => {
-            if (inDegree.get(key) === 0) {
-                queue.push(key);
-            }
-        });
-        while (queue.length) {
-            const cur = queue.shift();
-            result.push(cur);
-            const toEnQueue = graph.get(cur);
-            if (toEnQueue && toEnQueue.length) {
-                for (let i = 0; i < toEnQueue.length; i++) {
-                    const inDegreeVal = inDegree.get(toEnQueue[i]);
-                    if (inDegreeVal === 1) {
-                        queue.push(toEnQueue[i]);
-                    } else {
-                        inDegree.set(toEnQueue[i], inDegreeVal - 1);
-                    }
-                }
-            }
-        }
-        return result;
     }
 
     /**
@@ -155,12 +112,10 @@ export class Container {
         for (const child of this.childContainers) {
             child.destroy();
         }
-        const providers = this.getSortedList();
-        for (let index = providers.length - 1; index >= 0; index--) {
-            const element = providers[index];
-            const thisProvider = this.providers.get(element);
-            if (typeof thisProvider.destroy === 'function') {
-                thisProvider.destroy();
+        for (const token of this.graph.popAll()) {
+            const provider = this.providers.get(token);
+            if (typeof provider.destroy === 'function') {
+                provider.destroy();
             }
         }
         this.providers.clear();

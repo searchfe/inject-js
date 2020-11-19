@@ -9,7 +9,6 @@ class Token<T> {
 }
 
 export type InjectToken<T = any> = Token<T> | ServiceClass<T>;
-// export type InjectToken<T> = Token<T> | typeof Service;
 
 export function createInjectToken<T = any> (): InjectToken<T> {
     return new Token<T>();

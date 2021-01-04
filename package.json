@@ -65,6 +65,7 @@
     "gulp-merge": "^0.1.1",
     "gulp-transform-cache": "^1.1.1",
     "gulp-typescript": "^5.0.1",
+    "http-server": "^0.12.3",
     "jest": "^24.8.0",
     "jest-extended": "^0.11.5",
     "merge2": "^1.2.3",
@@ -73,12 +74,10 @@
     "ts-jest": "^24.0.2",
     "ts-node": "^8.10.2",
     "tslib": "^2.0.1",
+    "typedoc": "^0.19.2",
     "typescript": "^3.4.5"
   },
-  "dependencies": {
-    "http-server": "^0.12.3",
-    "typedoc": "^0.19.2"
-  },
+  "dependencies": {},
   "release": {
     "branch": "master",
     "plugins": [

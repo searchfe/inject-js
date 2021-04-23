@@ -1,3 +1,10 @@
+## [1.6.2](https://github.com/searchfe/inject-js/compare/v1.6.1...v1.6.2) (2021-04-23)
+
+
+### Bug Fixes
+
+* reset module field & add browser field ([6d3c5a5](https://github.com/searchfe/inject-js/commit/6d3c5a5e51d643ccbcd7050486d047d96a5c4e2b))
+
 ## [1.6.1](https://github.com/searchfe/inject-js/compare/v1.6.0...v1.6.1) (2020-11-18)
 
 

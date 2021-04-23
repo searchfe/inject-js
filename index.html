@@ -1,0 +1,275 @@
+<!doctype html>
+<html class="default no-js">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>@searchfe/inject-js</title>
+	<meta name="description" content="Documentation for @searchfe/inject-js">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+<header>
+	<div class="tsd-page-toolbar">
+		<div class="container">
+			<div class="table-wrap">
+				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
+					<div class="field">
+						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
+						<input id="tsd-search-field" type="text" />
+					</div>
+					<ul class="results">
+						<li class="state loading">Preparing search index...</li>
+						<li class="state failure">The search index is not available</li>
+					</ul>
+					<a href="index.html" class="title">@searchfe/inject-js</a>
+				</div>
+				<div class="table-cell" id="tsd-widgets">
+					<div id="tsd-filter">
+						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
+						<div class="tsd-filter-group">
+							<div class="tsd-select" id="tsd-filter-visibility">
+								<span class="tsd-select-label">All</span>
+								<ul class="tsd-select-list">
+									<li data-value="public">Public</li>
+									<li data-value="protected">Public/Protected</li>
+									<li data-value="private" class="selected">All</li>
+								</ul>
+							</div>
+							<input type="checkbox" id="tsd-filter-inherited" checked />
+							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
+							<input type="checkbox" id="tsd-filter-externals" checked />
+							<label class="tsd-widget" for="tsd-filter-externals">Externals</label>
+							<input type="checkbox" id="tsd-filter-only-exported" />
+							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
+						</div>
+					</div>
+					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="tsd-page-title">
+		<div class="container">
+			<ul class="tsd-breadcrumb">
+				<li>
+					<a href="globals.html">Globals</a>
+				</li>
+			</ul>
+			<h1>@searchfe/inject-js</h1>
+		</div>
+	</div>
+</header>
+<div class="container container-main">
+	<div class="row">
+		<div class="col-8 col-content">
+			<div class="tsd-panel tsd-typography">
+				<a href="#inject-js" id="inject-js" style="color: inherit; text-decoration: none;">
+					<h1>inject-js</h1>
+				</a>
+				<p><a href="https://travis-ci.com/github/searchfe/inject-js"><img src="https://travis-ci.com/searchfe/inject-js.svg?branch=master" alt="Build Status"></a>
+					<a href="https://github.com/searchfe/inject-js"><img src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg" alt="semantic-release"></a>
+				<a href="https://coveralls.io/github/searchfe/inject-js?branch=master"><img src="https://img.shields.io/coveralls/searchfe/inject-js.svg" alt="Coveralls"></a></p>
+				<p>一个极简的 TypeScript 依赖注入框架。<a href="https://searchfe.github.io/inject-js/">https://searchfe.github.io/inject-js/</a></p>
+				<ul>
+					<li><a href="https://github.com/searchfe/inject-js/blob/master/README.en.md">English</a></li>
+				</ul>
+				<a href="#安装" id="安装" style="color: inherit; text-decoration: none;">
+					<h2>安装</h2>
+				</a>
+				<p>使用 npm 来安装：</p>
+				<pre><code class="language-sh">npm install --save @searchfe/inject-js</code></pre>
+				<p>inject-js 需要 <a href="https://rbuckton.github.io/reflect-metadata/">Reflect Metadata</a> 来在运行时决定依赖类型，你的 <code>tsconfig.json</code> 需要包含以下的设置：</p>
+				<pre><code class="language-json">{
+  <span class="hljs-attr">&quot;compilerOptions&quot;</span>: {
+    <span class="hljs-attr">&quot;experimentalDecorators&quot;</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">&quot;emitDecoratorMetadata&quot;</span>: <span class="hljs-literal">true</span>
+  }
+}</code></pre>
+				<p>另外因为该库依赖 Reflect 的使用，确保运行时存在 Reflect API 的 Polyfill，比如以下之一：</p>
+				<ul>
+					<li><a href="https://www.npmjs.com/package/reflect-metadata">reflect-metadata</a></li>
+					<li><a href="https://www.npmjs.com/package/core-js">core-js (core-js/es7/reflect)</a></li>
+					<li><a href="https://www.npmjs.com/package/@abraham/reflection">reflection</a></li>
+				</ul>
+				<a href="#使用" id="使用" style="color: inherit; text-decoration: none;">
+					<h2>使用</h2>
+				</a>
+				<p>以下是一些使用案例，更多细节请参考 <a href="https://searchfe.github.io/inject-js/">API 文档</a>。</p>
+				<a href="#injectable" id="injectable" style="color: inherit; text-decoration: none;">
+					<h3>@injectable</h3>
+				</a>
+				<p>用 <code>@injectable</code> 来装饰一个 Service，这样 inject-js 就可以（借由 metadata）得知它的依赖并在运行时注入。</p>
+				<pre><code class="language-typescript">// car.ts
+import { injectable } from &#x27;inject-js&#x27;;
+import { Wheel } from &#x27;./wheel&#x27;;
+
+@injectable
+export class Car {
+    constructor(private wheel: Wheel) {}
+}
+
+// wheel.ts
+import { injectable } from &#x27;inject-js&#x27;;
+
+@injectable
+export class Wheel {
+    constructor() {}
+}
+
+// index.ts 应用入口
+import { Container } from &#x27;inject-js&#x27;;
+import { Car } from &#x27;./car&#x27;;
+import { Wheel } from &#x27;./wheel;
+
+const di = new Container();
+di.addService(Car);
+di.addService(Wheel);
+const car = di.create(Car);</code></pre>
+				<a href="#inject" id="inject" style="color: inherit; text-decoration: none;">
+					<h3>@inject</h3>
+				</a>
+				<p>用 <code>@inject(token)</code> 来装饰一个依赖（构造参数），来指定被注入的类。<code>token</code> 即为当前容器内 Provider 的唯一标识。
+					用于没有 Service 声明的场景（只有 Provider），或者没有 Metadata API 支持的场景。
+				也就是说借此可以在 JavaScript 代码中使用 inject-js。</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">import</span> { inject } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;inject-js&#x27;</span>;
+<span class="hljs-keyword">import</span> { Wheel } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./wheel&#x27;</span>;
+
+<span class="hljs-meta">@injectable</span>
+<span class="hljs-keyword">export</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Car</span> </span>{
+    <span class="hljs-function"><span class="hljs-title">constructor</span>(<span class="hljs-params"><span class="hljs-meta">@inject</span>(<span class="hljs-string">&#x27;Wheel&#x27;</span>) <span class="hljs-keyword">private</span> wheel: Wheel</span>)</span> {}
+}
+
+<span class="hljs-comment">// index.ts 应用入口</span>
+<span class="hljs-keyword">import</span> { Container } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;inject-js&#x27;</span>;
+<span class="hljs-keyword">import</span> { Car } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./car&#x27;</span>;
+<span class="hljs-keyword">import</span> { Wheel } <span class="hljs-keyword">from</span> <span class="hljs-string">&#x27;./wheel&#x27;</span>;
+
+<span class="hljs-keyword">const</span> di = <span class="hljs-keyword">new</span> Container();
+di.addService(<span class="hljs-string">&#x27;Wheel&#x27;</span>, Wheel);
+di.addService(Car);
+<span class="hljs-keyword">const</span> car = di.create(Car);</code></pre>
+				<a href="#service" id="service" style="color: inherit; text-decoration: none;">
+					<h3>@service</h3>
+				</a>
+				<p>如果 Container 实例就在定义 Service 的上下文中，可以用 @service 装饰器来直接注册：</p>
+				<pre><code class="language-typescript"><span class="hljs-keyword">const</span> container = <span class="hljs-keyword">new</span> Container();
+
+<span class="hljs-meta">@service</span>(container)
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FooService</span> </span>{}
+
+<span class="hljs-comment">// 相当于：</span>
+
+<span class="hljs-keyword">const</span> container = <span class="hljs-keyword">new</span> Container();
+
+<span class="hljs-meta">@injectable</span>
+<span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">FooService</span> </span>{}
+
+container.addService(FooService)</code></pre>
+				<a href="#container" id="container" style="color: inherit; text-decoration: none;">
+					<h3>Container</h3>
+				</a>
+				<p><a href="https://searchfe.github.io/inject-js/classes/_di_container_.container.html">Container</a> 会维护一个 Providers 集合，以及每个 Provider 对应的 Token。需要创建实例时，会根据 Token 查找对应的 Provider 并进行创建。
+				我们提供了如下几种注册 Provider 的方式：</p>
+				<ul>
+					<li><a href="https://searchfe.github.io/inject-js/classes/_di_container_.container.html#addprovider">.addProvider()</a>：注册一个具有 <code>.create(): Service</code> 方法的 Provider 类（工厂类），其余注册方式都是用 addProvider 实现的。</li>
+					<li><a href="https://searchfe.github.io/inject-js/classes/_di_container_.container.html#addFactory">.addFactory()</a>：注册一个会返回 Service 实例的方法（工厂方法）。</li>
+					<li><a href="https://searchfe.github.io/inject-js/classes/_di_container_.container.html#addService">.addService()</a>：注册一个具体的 Service 类。</li>
+					<li><a href="https://searchfe.github.io/inject-js/classes/_di_container_.container.html#addValue">.addValue()</a>：注册一个具体的值。</li>
+				</ul>
+				<a href="#示例" id="示例" style="color: inherit; text-decoration: none;">
+					<h2>示例</h2>
+				</a>
+				<p>在 demo 下包含了一个使用 inject-js 的示例。可以按以下步骤执行该示例：</p>
+				<ol>
+					<li>进入 inject-js 项目根目录。</li>
+					<li>构建 inject-js：<code>npm install &amp;&amp; npm run build</code>。</li>
+					<li>执行 demo：<code>npm run demo</code>。</li>
+				</ol>
+			</div>
+		</div>
+		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
+			<nav class="tsd-navigation primary">
+				<ul>
+					<li class="globals  ">
+						<a href="globals.html"><em>Globals</em></a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_decorators_inject_.html">&quot;decorators/inject&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_decorators_injectable_.html">&quot;decorators/injectable&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_decorators_service_.html">&quot;decorators/service&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_container_.html">&quot;di/container&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_dependency_.html">&quot;di/dependency&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_factory_provider_impl_.html">&quot;di/factory-<wbr>provider-<wbr>impl&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_inject_token_.html">&quot;di/inject-<wbr>token&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_provider_.html">&quot;di/provider&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_service_provider_impl_.html">&quot;di/service-<wbr>provider-<wbr>impl&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_di_value_provider_impl_.html">&quot;di/value-<wbr>provider-<wbr>impl&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_utils_array_.html">&quot;utils/array&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_utils_graph_.html">&quot;utils/graph&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_utils_map_.html">&quot;utils/map&quot;</a>
+					</li>
+				</ul>
+			</nav>
+			<nav class="tsd-navigation secondary menu-sticky">
+				<ul class="before-current">
+				</ul>
+			</nav>
+		</div>
+	</div>
+</div>
+<footer class="with-border-bottom">
+	<div class="container">
+		<h2>Legend</h2>
+		<div class="tsd-legend-group">
+			<ul class="tsd-legend">
+				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
+				<li class="tsd-kind-interface tsd-has-type-parameter"><span class="tsd-kind-icon">Interface with type parameter</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
+				<li class="tsd-kind-class tsd-has-type-parameter"><span class="tsd-kind-icon">Class with type parameter</span></li>
+			</ul>
+		</div>
+	</div>
+</footer>
+<div class="container tsd-generator">
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
+</div>
+<div class="overlay"></div>
+<script src="assets/js/main.js"></script>
+</body>
+</html>

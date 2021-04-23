@@ -2,7 +2,8 @@
   "name": "@searchfe/inject-js",
   "version": "1.6.1",
   "description": "A Dependency Injection library",
-  "main": "dist/amd/index.js",
+  "main": "dist/cjs/index.js",
+  "browser": "dist/amd/index.js",
   "module": "./dist/esm5/index.js",
   "types": "./dist/types/index.d.ts",
   "scripts": {

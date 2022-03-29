@@ -17,7 +17,7 @@ export function createServiceProvider<T extends Service> (Svc: ServiceClass<T>):
             return this.instance;
         }
         destroy () {
-            if (typeof this.instance.destroy === 'function') {
+            if (this.instance && typeof this.instance.destroy === 'function') {
                 this.instance.destroy();
             }
         }

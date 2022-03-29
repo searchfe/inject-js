@@ -114,7 +114,7 @@ export class Container {
         }
         for (const token of this.graph.popAll()) {
             const provider = this.providers.get(token);
-            if (typeof provider.destroy === 'function') {
+            if (provider && typeof provider.destroy === 'function') {
                 provider.destroy();
             }
         }

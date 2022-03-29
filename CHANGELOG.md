@@ -1,3 +1,10 @@
+## [1.6.3](https://github.com/searchfe/inject-js/compare/v1.6.2...v1.6.3) (2022-03-29)
+
+
+### Bug Fixes
+
+* 修复provider未create完成时调用destroy报错 ([dff2e21](https://github.com/searchfe/inject-js/commit/dff2e21810cc7a273afd93abab1fae9b5eb51ce4))
+
 ## [1.6.2](https://github.com/searchfe/inject-js/compare/v1.6.1...v1.6.2) (2021-04-23)
 
 

@@ -1,6 +1,6 @@
 {
   "name": "@searchfe/inject-js",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "A Dependency Injection library",
   "main": "dist/cjs/index.js",
   "browser": "dist/amd/index.js",

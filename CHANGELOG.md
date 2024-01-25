@@ -1,3 +1,10 @@
+## [1.6.4](https://github.com/searchfe/inject-js/compare/v1.6.3...v1.6.4) (2024-01-25)
+
+
+### Bug Fixes
+
+* 修改 inject 参数类型 ([b66038e](https://github.com/searchfe/inject-js/commit/b66038e60865b76ef5d6397866f3c2db59a5ca58))
+
 ## [1.6.3](https://github.com/searchfe/inject-js/compare/v1.6.2...v1.6.3) (2022-03-29)
 
 
